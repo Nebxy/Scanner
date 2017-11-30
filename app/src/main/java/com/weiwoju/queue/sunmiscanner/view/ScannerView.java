@@ -37,11 +37,17 @@ public class ScannerView extends SurfaceView implements SurfaceHolder.Callback {
     private CodeCaughtListener codeCaughtListener;
     private int measureedWidth;
     private int measureedHeight;
+    // 扫描同一条码时延迟扫描间隔
+    private long delayTime = 3000;
+    // 最近一次扫到的条码和时间
+    private String lastBarcode = "";
+    private long lastScannedTima = 0;
 
     public ScannerView(Context context) {
         super(context);
         init(context);
     }
+
 
 
     public ScannerView(Context context, @Nullable AttributeSet attrs) {
@@ -98,10 +104,9 @@ public class ScannerView extends SurfaceView implements SurfaceHolder.Callback {
             // 摄像头预览分辨率设置和图像放大参数设置，非必须，根据实际解码效果可取舍
             Camera.Parameters parameters = mCamera.getParameters();
             parameters.setPreviewSize(200, 400); // 设置预览分辨率
-            // parameters.set("zoom", String.valueOf(27 / 10.0));//放大图像2.7倍
+            // parameters.set("zoom", String.valueOf(27 / 10.0));   放大
             mCamera.setParameters(parameters);
-            // //////////////////////////////////////////
-            mCamera.setDisplayOrientation(90);// 竖屏显示
+            mCamera.setDisplayOrientation(90);   // 竖屏显示
             mCamera.setPreviewDisplay(getHolder());
             mCamera.setPreviewCallback(previewCallback);
             mCamera.startPreview();
@@ -137,7 +142,6 @@ public class ScannerView extends SurfaceView implements SurfaceHolder.Callback {
             // 解码，返回值为0代表失败，>0表示成功
             int nsyms = scanner.scanImage(src_data);
             if (nsyms != 0) {
-                playBeepSoundAndVibrate();// 解码成功播放提示音
                 SymbolSet syms = scanner.getResults();// 获取解码结果
                 for (Symbol sym : syms) {
                     String barCode = sym.getResult();
@@ -153,10 +157,27 @@ public class ScannerView extends SurfaceView implements SurfaceHolder.Callback {
             super.onPostExecute(result);
             stoped = true;
             if (!TextUtils.isEmpty(result)) {
-                // textview.setText(str);// 显示解码结果
+                //  解码结果
                 if (codeCaughtListener != null) {
+                    long millis = System.currentTimeMillis();
                     Log.i("BarcodeCaught >>>>>", result);
-                    codeCaughtListener.onCodeCaught(result);
+                    if (!lastBarcode.equals(result)) {
+                        codeCaughtListener.onCodeCaught(result);
+                        playBeepSoundAndVibrate();// 解码成功播放提示音
+                        lastScannedTima = millis;
+
+                    } else {
+                        // 如果扫码相同条码，考虑扫码间隔
+                        if (millis - lastScannedTima > delayTime) {
+                            codeCaughtListener.onCodeCaught(result);
+                            playBeepSoundAndVibrate();// 解码成功播放提示音
+                            lastScannedTima = millis;
+
+                        }
+                    }
+
+                    lastBarcode = result;
+
                 }
             }
         }
@@ -198,7 +219,7 @@ public class ScannerView extends SurfaceView implements SurfaceHolder.Callback {
         public void onPreviewFrame(byte[] data, Camera camera) {
             if (asyncDecode.isStoped()) {
                 Camera.Parameters parameters = camera.getParameters();
-                Camera.Size size = parameters.getPreviewSize();// 获取预览分辨率
+                Camera.Size size = parameters.getPreviewSize(); // 获取预览分辨率
 
                 // 创建解码图像，并转换为原始灰度数据，注意图片是被旋转了90度的
                 Image source = new Image(size.width, size.height, "Y800");
@@ -207,9 +228,9 @@ public class ScannerView extends SurfaceView implements SurfaceHolder.Callback {
                 // 图片旋转了90度，将扫描框的TOP作为left裁剪
                 source.setCrop(scanImageRect.top, scanImageRect.left,
                         scanImageRect.height(), scanImageRect.width());
-                source.setData(data);// 填充数据
+                source.setData(data);
                 asyncDecode = new AsyncDecode();
-                asyncDecode.execute(source);// 调用异步执行解码
+                asyncDecode.execute(source);
             }
         }
     };
@@ -258,5 +279,12 @@ public class ScannerView extends SurfaceView implements SurfaceHolder.Callback {
         SoundUtils.getInstance(context).putSound(0, resourceId);
     }
 
-
+    /**
+     * 设置两次扫码相同时的间隔时间
+     *
+     * @param delayTime
+     */
+    public void setDelayTime(float delayTime) {
+        this.delayTime = (long) (delayTime * 1000);
+    }
 }
