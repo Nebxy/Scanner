@@ -9,14 +9,28 @@
 
     <TextView
         android:id="@+id/tv_barcode"
-        android:text="barcode"
         android:layout_width="match_parent"
-        android:layout_height="30dp" />
+        android:layout_height="30dp"
+        android:text="barcode" />
 
-    <com.weiwoju.queue.sunmiscanner.view.ScannerView
-        android:id="@+id/scanner"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp" />
+        android:layout_height="150dp">
+
+
+        <com.weiwoju.queue.sunmiscanner.view.ScannerView
+            android:id="@+id/scanner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/iv_scaning"
+            android:layout_width="wrap_content"
+            android:scaleType="fitXY"
+            android:layout_height="match_parent"
+            android:src="@drawable/scan" />
+
+    </RelativeLayout>
 
 
 </android.support.v7.widget.LinearLayoutCompat>
