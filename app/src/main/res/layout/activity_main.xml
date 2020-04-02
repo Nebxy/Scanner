@@ -5,32 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.weiwoju.queue.sunmiscanner.MainActivity">
-
-    <TextView
-        android:id="@+id/tv_barcode"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:text="barcode" />
+    android:weightSum="10"
+    tools:context=".MainActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="0dp"
+        android:layout_weight="7">
 
 
-        <com.weiwoju.queue.sunmiscanner.view.ScannerView
+        <com.be.scanner.view.ScannerView
             android:id="@+id/scanner"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <ImageView
-            android:id="@+id/iv_scaning"
+            android:id="@+id/iv_scanning"
             android:layout_width="wrap_content"
-            android:scaleType="fitXY"
             android:layout_height="match_parent"
+            android:scaleType="fitXY"
             android:src="@drawable/scan" />
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/tv_barcode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="barcode:"
+        android:textSize="20dp" />
 
 </android.support.v7.widget.LinearLayoutCompat>
