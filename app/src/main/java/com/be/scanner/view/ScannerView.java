@@ -32,7 +32,7 @@ public class ScannerView extends SurfaceView implements SurfaceHolder.Callback {
     private MultiFormatReader mReader;
 
     // 扫描同一条码时延迟扫描间隔
-    private long mInterval = 2000;
+    private long mInterval = 500;
     // 最近一次扫到的条码和时间
     private String mLastCode = "";
     private long mLastTime = 0;
