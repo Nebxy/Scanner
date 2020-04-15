@@ -1,26 +1,24 @@
 package com.be.scanner;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.be.scanner.R;
-import com.be.scanner.view.ScannerView;
+import com.be.scanner.view.ScanView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 public class MainActivity extends AppCompatActivity {
 
     private TextView tvBarcode;
     private ImageView iv_scanning;
-    private ScannerView scanner;
+    private ScanView scanner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         iv_scanning = findViewById(R.id.iv_scanning);
         scanner = findViewById(R.id.scanner);
         tvBarcode = findViewById(R.id.tv_barcode);
-        scanner.setListener(new ScannerView.CodeCaughtListener() {
+        scanner.setListener(new ScanView.CodeCaughtListener() {
             @Override
             public void onCodeCaught(final String barCode) {
                 runOnUiThread(new Runnable() {
@@ -55,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         iv_scanning.startAnimation(verticalAnimation);
 
         if (hasPermissions(Manifest.permission.CAMERA)) {
-            scanner.startScan();
+            scanner.startScan(this);
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
         }
@@ -83,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
             if (hasPermissions(Manifest.permission.CAMERA)) {
-                scanner.startScan();
+                scanner.startScan(this);
             }
         }
     }

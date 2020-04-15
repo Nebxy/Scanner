@@ -3,7 +3,6 @@ package com.be.scanner.view;
 import android.content.Context;
 import android.hardware.Camera;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -18,11 +17,13 @@ import com.google.zxing.common.HybridBinarizer;
 
 import java.util.List;
 
+import androidx.annotation.Nullable;
+
 /**
  * Created by Be on 2017/11/29.
  * 条码&二维码扫描
  */
-
+@Deprecated
 public class ScannerView extends SurfaceView implements SurfaceHolder.Callback {
 
     private Camera mCamera;

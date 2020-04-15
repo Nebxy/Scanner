@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         android:layout_weight="7">
 
 
-        <com.be.scanner.view.ScannerView
+        <com.be.scanner.view.ScanView
             android:id="@+id/scanner"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -36,4 +36,4 @@
         android:text="barcode:"
         android:textSize="20dp" />
 
-</android.support.v7.widget.LinearLayoutCompat>
+</LinearLayout>
